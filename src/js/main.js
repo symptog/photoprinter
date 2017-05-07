@@ -10,6 +10,7 @@ const settingsFilePath = path.join(nw.App.dataPath, settingsFile);
 let appSettings = {};
 const pictures = [];
 let pictureIndex = 0;
+let ready = false;
 
 function testFiles(p, s = null) {
   if (s && s.isDirectory()) {
@@ -143,6 +144,8 @@ function initImage() {
   bg.src = picture;
 }
 
+function instantprint() {}
+
 // Routing
 const root = null;
 const useHash = true; // Defaults to: false
@@ -182,9 +185,16 @@ router
 watcher
   .on('add', (p) => {
     pictures.push(`data:${mime.lookup(p)};base64, ${base64Encode(p)}`);
+    if (ready) {
+      initImage();
+    }
+  })
+  .on('ready', () => {
     initImage();
-  });
+    ready = true;
+});
 
+/*
 // Create an empty context menu
 const menu = new nw.Menu({ type: 'menubar' });
 
@@ -203,6 +213,7 @@ menu.append(new nw.MenuItem({
 }));
 
 nw.Window.get().menu = menu;
+*/
 
 nw.Window.get().showDevTools();
 

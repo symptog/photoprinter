@@ -1,6 +1,10 @@
 <div id="images">
-  <a class="prev_image" onclick="prevImage()"></a>
+  <div class="prev_image circle" onclick="prevImage()"><i class="icon-circle-left"></i></div>
   <img id="blurrypicture" src="" alt="">
   <img id="picture" src="" alt="">
-  <a class="next_image" onclick="nextImage()"></a>
+  <div class="next_image circle" onclick="nextImage()"><i class="icon-circle-right"></i></div>
+  <div class="bottom_left">
+    <div class="circle_printer" onclick="instantprint()"><i class="icon-printer"></i></div>
+    <div class="circle_settings" onclick="router.navigate('/settings')"><i class="icon-cogs"></i></div>
+  </div>
 </div>

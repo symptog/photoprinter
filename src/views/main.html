@@ -2,6 +2,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/lib/css/icomoon.css">
     <style>
       body {
         margin: 0 auto;
@@ -10,7 +11,6 @@
         overflow: hidden;
         
       }
-      
       #blurrypicture {
         position: fixed;
         top: -2.5%;
@@ -19,7 +19,7 @@
         display: block;
         width: 105%;
         height: 105%;
-        filter: blur(10px) sepia(1) opacity(80%);
+        filter: blur(15px) sepia(60%) opacity(80%);
       }
       #picture {
         height: 100%;
@@ -28,25 +28,73 @@
       }
       .prev_image {
         position: fixed;
-        top: 45%;
+        top: calc(50% - 50px);
         left: 0;
         width: 0;
         height: 0;
-        border-style: solid;
-        border-width: 100px 50px 100px 0;
-        border-color: transparent #007bff transparent transparent;
         margin: 20px;
       }
       .next_image {
         position: fixed;
-        top: 45%;
+        top: calc(50% - 50px);
         right: 0;
         width: 0;
         height: 0;
-        border-style: solid;
-        border-width: 100px 0 100px 50px;
-        border-color: transparent transparent transparent #007bff;
         margin: 20px;
+      }
+      .bottom_left {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .circle {
+        width: 100px;
+        height: 100px;
+        -moz-border-radius: 50%; 
+        -webkit-border-radius: 50%; 
+        border-radius: 50%;
+        background: #F56E5F;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        color: #EBEBEB;
+        font-size: 400%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .circle_printer {
+        margin: 10px;
+        width: 100px;
+        height: 100px;
+        -moz-border-radius: 50%; 
+        -webkit-border-radius: 50%; 
+        border-radius: 50%;
+        background: #6AB1EB;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        color: #EBEBEB;
+        font-size: 300%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .circle_settings {
+        margin: 10px;
+        width: 60px;
+        height: 60px;
+        -moz-border-radius: 50%; 
+        -webkit-border-radius: 50%; 
+        border-radius: 50%;
+        background: #F7E136;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        color: #525252;
+        font-size: 200%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     </style>
   </head>
