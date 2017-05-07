@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "extends": "airbnb-base",
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true,
+    "jquery": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {}
+  },
+  "rules": {
+    "quotes": ["error", "single"],
+    "no-else-return": "warn",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-console": "off",
+    "no-restricted-syntax": "off"
+  },
+  "plugins": ["html"]
+}
