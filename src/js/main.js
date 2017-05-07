@@ -3,11 +3,13 @@ const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
 const Navigo = require('navigo');
+const mime = require('mime');
 
 const settingsFile = 'settings.json';
 const settingsFilePath = path.join(nw.App.dataPath, settingsFile);
 let appSettings = {};
 const pictures = [];
+let pictureIndex = 0;
 
 function testFiles(p, s = null) {
   if (s && s.isDirectory()) {
@@ -17,6 +19,13 @@ function testFiles(p, s = null) {
     return !/(png|jpg|jpeg|PNG|JPG|JPEG)$/.test(p);
   }
   return false;
+}
+
+function base64Encode(file) {
+  // read binary data
+  const bitmap = fs.readFileSync(file);
+  // convert binary data to base64 encoded string
+  return new Buffer(bitmap).toString('base64');
 }
 
 const watcher = chokidar.watch(null, {
@@ -71,14 +80,18 @@ function saveSetting(el) {
 }
 
 function loadSettingsFromFile() {
-  fs.readFile(settingsFilePath, (err, data) => {
-    if (err) {
-      console.log('Error loading Settings!');
-    } else {
-      appSettings = JSON.parse(data);
-      console.log('Settings loaded');
-      watcher.add(appSettings.picture_path);
-    }
+  return new Promise((resolve, reject) => {
+    fs.readFile(settingsFilePath, (err, data) => {
+      if (err) {
+        console.log('Error loading Settings!');
+        reject(err);
+      } else {
+        appSettings = JSON.parse(data);
+        console.log('Settings loaded');
+        watcher.add(appSettings.picture_path);
+        resolve();
+      }
+    });
   });
 }
 
@@ -99,6 +112,36 @@ function loadSettingsToForm(e) {
   }
 }
 
+function prevImage() {
+  const el = document.querySelector('#picture');
+  const bg = document.querySelector('#blurrypicture');
+  if (pictureIndex > 0) {
+    pictureIndex -= 1;
+  }
+  const picture = pictures[pictureIndex];
+  el.src = picture;
+  bg.src = picture;
+}
+
+function nextImage() {
+  const el = document.querySelector('#picture');
+  const bg = document.querySelector('#blurrypicture');
+  if (pictureIndex < pictures.length - 1) {
+    pictureIndex += 1;
+  }
+  const picture = pictures[pictureIndex];
+  el.src = picture;
+  bg.src = picture;
+}
+
+function initImage() {
+  const el = document.querySelector('#picture');
+  const bg = document.querySelector('#blurrypicture');
+  pictureIndex = pictures.length - 1;
+  const picture = pictures[pictureIndex];
+  el.src = picture;
+  bg.src = picture;
+}
 
 // Routing
 const root = null;
@@ -123,7 +166,9 @@ function setContent(content) {
         .then(resp => resp.text())
         .then((text) => {
           el.innerHTML = text;
-        });
+          return Promise.resolve(el);
+        })
+        .then(e => initImage(e));
   }
 }
 
@@ -134,6 +179,11 @@ router
   })
   .resolve();
 
+watcher
+  .on('add', (p) => {
+    pictures.push(`data:${mime.lookup(p)};base64, ${base64Encode(p)}`);
+    initImage();
+  });
 
 // Create an empty context menu
 const menu = new nw.Menu({ type: 'menubar' });
@@ -156,12 +206,4 @@ nw.Window.get().menu = menu;
 
 nw.Window.get().showDevTools();
 
-router.navigate('/');
-
-loadSettingsFromFile();
-
-watcher
-  .on('add', (p) => {
-    pictures.push(p);
-    console.log(pictures);
-  });
+loadSettingsFromFile().then(() => router.navigate('/'));

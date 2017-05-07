@@ -1,20 +1,16 @@
-<div class="container">
-  <h3>Settings</h3>
-  <div class="row">
-    <form id="settings_form">
-      <h4>Gallery Settings</h4>
-      <label for="picture_path">Picture Path</label>
-      <div>Current Path: <span id="picture_path_current"></span></div>
-      <input name="picture_path" id="picture_path" type="file" onchange="saveSetting(this)" nwdirectory>
-      <h4>Printer Settings</h4>
-      <label for="printer">Printer</label>
-      <select name="printer" id="printer" onchange="saveSetting(this)">
-        <option value="" selected>Choose your option</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-      </select>
-      
-    </form>
-  </div>
+<h3>Settings</h3>
+  <form id="settings_form">
+    <h4>Gallery Settings</h4>
+    <label for="picture_path">Picture Path</label>
+    <div>Current Path: <span id="picture_path_current"></span></div>
+    <input name="picture_path" id="picture_path" type="file" onchange="saveSetting(this)" nwdirectory>
+    <h4>Printer Settings</h4>
+    <label for="printer">Printer</label>
+    <select name="printer" id="printer" onchange="saveSetting(this)">
+      <option value="" selected>Choose your option</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+    </select>
+  </form>
 </div>
 
