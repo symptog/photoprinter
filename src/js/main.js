@@ -7,6 +7,24 @@ const Navigo = require('navigo');
 const settingsFile = 'settings.json';
 const settingsFilePath = path.join(nw.App.dataPath, settingsFile);
 let appSettings = {};
+const pictures = [];
+
+function testFiles(p, s = null) {
+  if (s && s.isDirectory()) {
+    return false;
+  }
+  if (s && s.isFile()) {
+    return !/(png|jpg|jpeg|PNG|JPG|JPEG)$/.test(p);
+  }
+  return false;
+}
+
+const watcher = chokidar.watch(null, {
+  ignored: testFiles,
+  depth: 0,
+  followSymlinks: false,
+  disableGlobbing: true,
+});
 
 function saveSettingsToFile(settings) {
   fs.writeFile(settingsFilePath, JSON.stringify(settings), (err) => {
@@ -19,13 +37,36 @@ function saveSettingsToFile(settings) {
 }
 
 function saveSettings(settings = {}) {
-  appSettings = Object.assign({}, appSettings, settings);
-  saveSettingsToFile(appSettings);
+  Promise.resolve()
+    .then(() => {
+      if (Object.prototype.hasOwnProperty.call(settings, 'picture_path')) {
+        Promise.resolve()
+          .then(() => {
+            // ToDo: Path not unwatched
+            watcher.unwatch(appSettings.picture_path);
+            return Promise.resolve();
+          })
+          .then(() => {
+            watcher.add(settings.picture_path);
+          });
+      }
+      return Promise.resolve();
+    })
+    .then(() => {
+      appSettings = Object.assign({}, appSettings, settings);
+      return Promise.resolve();
+    })
+    .then(() => {
+      saveSettingsToFile(appSettings);
+    });
 }
 
 function saveSetting(el) {
   const data = {};
   data[el.name] = el.value;
+  if (el.type === 'file') {
+    el.parentNode.querySelector(`[id="${el.id}_current"]`).innerHTML = el.value;
+  }
   saveSettings(data);
 }
 
@@ -36,6 +77,7 @@ function loadSettingsFromFile() {
     } else {
       appSettings = JSON.parse(data);
       console.log('Settings loaded');
+      watcher.add(appSettings.picture_path);
     }
   });
 }
@@ -56,6 +98,7 @@ function loadSettingsToForm(e) {
     }
   }
 }
+
 
 // Routing
 const root = null;
@@ -117,3 +160,8 @@ router.navigate('/');
 
 loadSettingsFromFile();
 
+watcher
+  .on('add', (p) => {
+    pictures.push(p);
+    console.log(pictures);
+  });
