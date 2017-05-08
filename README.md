@@ -46,8 +46,11 @@ yarn build
 
 ## Build for Raspberry PI 3
 
-This currently doesn't work because `nwjs_rpi` uses a old NW.js and onde.js version.
+On your PI:
 
+Install [node.js](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+
+Install [yarn](https://yarnpkg.com/en/docs/install)
 
 Install `nw-gyp` global:
 
@@ -55,10 +58,11 @@ Install `nw-gyp` global:
 npm install -g nw-gyp
 ```
 
-Remove all unnecessary files:
+Get the Repo:
 
 ```
-rm -rf node_modules build
+git clone https://github.com/symptog/photoprinter.git
+cd photoprinter
 yarn install --production
 ```
 
@@ -69,5 +73,7 @@ zip -r ../${PWD##*/}.nw *
 ```
 
 Get [NW.js for ARMv7](https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases) on your Raspberry PI 3
+
+Run `path/to/nw path/to/photoprinter.nw`
 
 
