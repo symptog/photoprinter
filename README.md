@@ -44,7 +44,7 @@ Change the following in `package.json`:
 yarn build
 ```
 
-## Build for Raspberry PI
+## Build for Raspberry PI 3
 
 This currently doesn't work because `nwjs_rpi` uses a old NW.js and onde.js version.
 
@@ -68,12 +68,6 @@ Create `.nw` file:
 zip -r ../${PWD##*/}.nw *
 ```
 
-```
-git clone https://github.com/jalbam/nwjs_rpi
-cd nwjs_rpi
-cp ../photoprinter.nw .
-```
+Get [NW.js for ARMv7](https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases) on your Raspberry PI 3
 
-Follow instructions on [https://github.com/jalbam/nwjs_rpi](https://github.com/jalbam/nwjs_rpi)
 
-Copy the folder `nwjs_rpi` to Raspberry PI and run the App.

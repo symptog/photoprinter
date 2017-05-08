@@ -11,10 +11,10 @@
   "author": "Tobias Gall <tobias.gall@mailbox.org>",
   "license": "MIT",
   "scripts": {
-    "postinstall": "cd node_modules/printer && nw-gyp rebuild --target=0.22.1",
+    "postinstall": "cd node_modules/printer && nw-gyp rebuild --target=0.20.3",
     "start": "nw .",
-    "build": "nwbuild -v latest --flavor normal -p linux64 -o ./build .",
-    "install-nw": "nw install 0.22.1-sdk"
+    "build": "nwbuild -v 0.20.3 --flavor normal -p linux64 -o ./build .",
+    "install-nw": "nw install 0.20.3-sdk"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
