@@ -12,7 +12,7 @@ let appSettings = {};
 const pictures = [];
 let pictureIndex = 0;
 let ready = false;
-let printers = null;
+const printers = printer.getPrinters();
 
 function testFiles(p, s = null) {
   if (s && s.isDirectory()) {
@@ -95,7 +95,6 @@ function loadSettings() {
       } else {
         appSettings = JSON.parse(data);
         watcher.add(appSettings.picture_path);
-        printers = printer.getPrinters();
         console.log('Settings loaded');
         resolve();
       }
@@ -253,4 +252,6 @@ nw.Window.get().menu = menu;
 
 nw.Window.get().showDevTools();
 
-loadSettings().then(() => router.navigate('/'));
+loadSettings()
+  .then(() => router.navigate('/'))
+  .catch(() => router.navigate('/settings'));
