@@ -11,12 +11,12 @@ body {
 #blurrypicture {
   position: fixed;
   top: -2.5%;
-  left: -2.5%;
+  left: 0;
   z-index: -1;
   display: block;
-  width: 105%;
-  height: 105%;
-  filter: blur(15px) sepia(60%) opacity(80%);
+  width: 100%;
+  height: 110%;
+  filter: blur(10px) sepia(60%) opacity(80%);
 }
 #picture {
   height: 100%;
