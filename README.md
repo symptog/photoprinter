@@ -1,6 +1,6 @@
 # PhotoPrinter
 
-Desciption coming soon ;)
+Description coming soon ;)
 
 ## Development (Ubuntu 14.04)
 
