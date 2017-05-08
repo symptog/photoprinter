@@ -229,7 +229,7 @@ watcher
     ready = true;
   });
 
-nw.Window.get().showDevTools();
+// nw.Window.get().showDevTools();
 
 loadSettings()
   .then(() => router.navigate('/'))
