@@ -4,6 +4,7 @@ const path = require('path');
 const chokidar = require('chokidar');
 const Navigo = require('navigo');
 const mime = require('mime');
+const printer = require('printer');
 
 const settingsFile = 'settings.json';
 const settingsFilePath = path.join(nw.App.dataPath, settingsFile);
@@ -11,6 +12,7 @@ let appSettings = {};
 const pictures = [];
 let pictureIndex = 0;
 let ready = false;
+let printers = null;
 
 function testFiles(p, s = null) {
   if (s && s.isDirectory()) {
@@ -22,11 +24,15 @@ function testFiles(p, s = null) {
   return false;
 }
 
-function base64Encode(file) {
+function fileBuffer(file) {
   // read binary data
   const bitmap = fs.readFileSync(file);
+  return new Buffer(bitmap);
+}
+
+function base64Encode(file) {
   // convert binary data to base64 encoded string
-  return new Buffer(bitmap).toString('base64');
+  return fileBuffer(file).toString('base64');
 }
 
 const watcher = chokidar.watch(null, {
@@ -80,7 +86,7 @@ function saveSetting(el) {
   saveSettings(data);
 }
 
-function loadSettingsFromFile() {
+function loadSettings() {
   return new Promise((resolve, reject) => {
     fs.readFile(settingsFilePath, (err, data) => {
       if (err) {
@@ -88,8 +94,9 @@ function loadSettingsFromFile() {
         reject(err);
       } else {
         appSettings = JSON.parse(data);
-        console.log('Settings loaded');
         watcher.add(appSettings.picture_path);
+        printers = printer.getPrinters();
+        console.log('Settings loaded');
         resolve();
       }
     });
@@ -97,6 +104,22 @@ function loadSettingsFromFile() {
 }
 
 function loadSettingsToForm(e) {
+  const printerSelect = e.querySelector('#printer');
+  if (printers) {
+    const doption = document.createElement('option');
+    doption.text = 'Choose your option';
+    printerSelect.add(doption);
+    for (let p of printers) {
+      const option = document.createElement('option');
+      option.text = p.name;
+      option.value = p.name;
+      printerSelect.add(option);
+    }
+  } else {
+    const doption = document.createElement('option');
+    doption.text = 'No printers available!';
+    printerSelect.add(doption);
+  }
   for (let key in appSettings) {
     if (Object.prototype.hasOwnProperty.call(appSettings, key)) {
       try {
@@ -113,38 +136,46 @@ function loadSettingsToForm(e) {
   }
 }
 
+function updateImage(picture = null) {
+  if (picture) {
+    const el = document.querySelector('#picture');
+    el.src = picture.base64;
+    el.setAttribute('data-file', picture.file);
+    el.setAttribute('data-type', picture.type);
+    const bg = document.querySelector('#blurrypicture');
+    bg.src = picture.base64;
+  }
+}
+
 function prevImage() {
-  const el = document.querySelector('#picture');
-  const bg = document.querySelector('#blurrypicture');
   if (pictureIndex > 0) {
     pictureIndex -= 1;
   }
-  const picture = pictures[pictureIndex];
-  el.src = picture;
-  bg.src = picture;
+  updateImage(pictures[pictureIndex]);
 }
 
 function nextImage() {
-  const el = document.querySelector('#picture');
-  const bg = document.querySelector('#blurrypicture');
   if (pictureIndex < pictures.length - 1) {
     pictureIndex += 1;
   }
-  const picture = pictures[pictureIndex];
-  el.src = picture;
-  bg.src = picture;
+  updateImage(pictures[pictureIndex]);
 }
 
 function initImage() {
-  const el = document.querySelector('#picture');
-  const bg = document.querySelector('#blurrypicture');
   pictureIndex = pictures.length - 1;
-  const picture = pictures[pictureIndex];
-  el.src = picture;
-  bg.src = picture;
+  updateImage(pictures[pictureIndex]);
 }
 
-function instantprint() {}
+function instantprint() {
+  const el = document.querySelector('#picture');
+  printer.printDirect({
+    data: fileBuffer(el.getAttribute('data-file')),
+    printer: appSettings.printer,
+    type: el.getAttribute('data-type'),
+    success: () => console.log('print successfull'),
+    error: err => console.error(err),
+  });
+}
 
 // Routing
 const root = null;
@@ -184,7 +215,12 @@ router
 
 watcher
   .on('add', (p) => {
-    pictures.push(`data:${mime.lookup(p)};base64, ${base64Encode(p)}`);
+    const mimeType = mime.lookup(p);
+    pictures.push({
+      file: p,
+      base64: `data:${mimeType};base64,${base64Encode(p)}`,
+      type: mime.extension(mimeType).toUpperCase(),
+    });
     if (ready) {
       initImage();
     }
@@ -217,4 +253,4 @@ nw.Window.get().menu = menu;
 
 nw.Window.get().showDevTools();
 
-loadSettingsFromFile().then(() => router.navigate('/'));
+loadSettings().then(() => router.navigate('/'));
