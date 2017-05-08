@@ -43,3 +43,37 @@ Change the following in `package.json`:
 ```
 yarn build
 ```
+
+## Build for Raspberry PI
+
+This currently doesn't work because `nwjs_rpi` uses a old NW.js and onde.js version.
+
+
+Install `nw-gyp` global:
+
+```
+npm install -g nw-gyp
+```
+
+Remove all unnecessary files:
+
+```
+rm -rf node_modules build
+yarn install --production
+```
+
+Create `.nw` file:
+
+```
+zip -r ../${PWD##*/}.nw *
+```
+
+```
+git clone https://github.com/jalbam/nwjs_rpi
+cd nwjs_rpi
+cp ../photoprinter.nw .
+```
+
+Follow instructions on [https://github.com/jalbam/nwjs_rpi](https://github.com/jalbam/nwjs_rpi)
+
+Copy the folder `nwjs_rpi` to Raspberry PI and run the App.
