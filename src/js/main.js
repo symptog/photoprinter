@@ -227,28 +227,7 @@ watcher
   .on('ready', () => {
     initImage();
     ready = true;
-});
-
-/*
-// Create an empty context menu
-const menu = new nw.Menu({ type: 'menubar' });
-
-// Add some items with label
-menu.append(new nw.MenuItem({
-  label: 'Main',
-  click: () => {
-    router.navigate('/');
-  },
-}));
-menu.append(new nw.MenuItem({
-  label: 'Settings',
-  click: () => {
-    router.navigate('/settings');
-  },
-}));
-
-nw.Window.get().menu = menu;
-*/
+  });
 
 nw.Window.get().showDevTools();
 

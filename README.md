@@ -6,27 +6,40 @@ Description coming soon ;)
 
 ### Requirements:
 
+* [yarn](https://yarnpkg.com)
 * libcups2-dev
 
   ```
   sudo apt-get install libcups2-dev
   ```
 
-* [yarn](https://yarnpkg.com)
-* [NW.js](https://nwjs.io/) (SDK version)
-
-### Install Node Packages
+### Install Node Packages and NW.js
 
 ```
 yarn install
-
-npm install -g nw-gyp
-cd node_modules/printer
-nw-gyp rebuild --target=<NW.js version number>
+yarn install-nw
 ```
 
 ### Run App
 
 ```
 yarn start
+```
+
+You may want to change the window size while developing.
+
+Change the following in `package.json`:
+
+```json
+"window": {
+  "kiosk": false,
+  "width": 800,
+  "height": 480
+}
+```
+
+### Build App
+
+```
+yarn build
 ```

@@ -1,23 +1,29 @@
 {
-  "name": "photoprinter",
-  "version": "0.0.1",
+  "name": "PhotoPrinter",
+  "version": "1.0.0",
   "main": "src/views/main.html",
   "window": {
-    "kiosk": false,
-    "toolbar": false,
+    "title": "PhotoPrinter",
+    "kiosk": true,
     "width": 800,
     "height": 480
   },
   "author": "Tobias Gall <tobias.gall@mailbox.org>",
   "license": "MIT",
   "scripts": {
-    "start": "nw ."
+    "postinstall": "cd node_modules/printer && nw-gyp rebuild --target=0.22.1",
+    "start": "nw .",
+    "build": "nwbuild -v latest --flavor normal -p linux64 -o ./build .",
+    "install-nw": "nw install 0.22.1-sdk"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.1.3",
     "eslint-plugin-html": "^2.0.1",
-    "eslint-plugin-import": "^2.2.0"
+    "eslint-plugin-import": "^2.2.0",
+    "nw-builder": "^3.2.0",
+    "nw-gyp": "^3.4.0",
+    "nwjs": "^1.4.3"
   },
   "dependencies": {
     "chokidar": "^1.6.1",
